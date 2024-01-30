@@ -1,6 +1,7 @@
 #!/bin/bash
 
-servers=$(vim --serverlist)
+# get serverlist and sort by longest first, so we match more specifically first
+servers=$(vim --serverlist | perl -e 'print sort { length($b) <=> length($a) } <>')
 
 declare chosen_server
 
@@ -9,11 +10,13 @@ caps_pwd=${PWD^^}
 for server in $servers; do
 	if [ ! -z $(echo $caps_pwd | grep $server) ]; then
 		chosen_server=$server
+		break
 	fi
 done
 
 if [ ! -z $chosen_server ]; then
 	echo "using existing vim server: $chosen_server"
+
 	/usr/bin/vim --servername $chosen_server --remote-tab "$@"
 else
 	new_server_name=$caps_pwd
