@@ -3,6 +3,9 @@
 # get serverlist and sort by longest first, so we match more specifically first
 servers=$(vim --serverlist | perl -e 'print sort { length($b) <=> length($a) } <>')
 
+# imposed by vim
+MAX_SERVER_NAME_LENGTH=100
+
 declare chosen_server
 
 caps_pwd=${PWD^^}
@@ -19,7 +22,7 @@ if [ ! -z $chosen_server ]; then
 
 	/usr/bin/vim --servername $chosen_server --remote-tab "$@"
 else
-	new_server_name=$caps_pwd
+	new_server_name=$(echo $caps_pwd | head -c $MAX_SERVER_NAME_LENGTH)
 	echo "new vim server: $new_server_name"
 	/usr/bin/vim --servername $new_server_name "$@"
 fi
