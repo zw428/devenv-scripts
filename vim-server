@@ -8,10 +8,10 @@ MAX_SERVER_NAME_LENGTH=100
 
 declare chosen_server
 
-caps_pwd=${PWD^^}
+server_name=$(get-current-workspace)
 
 for server in $servers; do
-	if [ ! -z $(echo $caps_pwd | grep $server) ]; then
+	if [ ! -z $(echo $server_name | grep $server) ]; then
 		chosen_server=$server
 		break
 	fi
@@ -22,7 +22,7 @@ if [ ! -z $chosen_server ]; then
 
 	/usr/bin/vim --servername $chosen_server --remote-tab "$@"
 else
-	new_server_name=$(echo $caps_pwd | head -c $MAX_SERVER_NAME_LENGTH)
+	new_server_name=$(echo $server_name | head -c $MAX_SERVER_NAME_LENGTH)
 	echo "new vim server: $new_server_name"
 	/usr/bin/vim --servername $new_server_name "$@"
 fi
